@@ -1,4 +1,4 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, jsonify
 
 app = Flask(__name__)
 
@@ -10,13 +10,19 @@ def index():
 def classic():
     return render_template('classic.html')
 
-@app.route('/404')
-def page_404():
-    return render_template('404.html')
+@app.errorhandler(404)
+@app.route('/page_404')
+def page_404(error):
+    # You can customize the error page however you like
+    return jsonify({'error': 'Not found'}), 404
 
-@app.route('/500')
-def page_500():
-    return render_template('500.html')
+
+@app.errorhandler(500)
+@app.route('/page_500')
+def page_500(error):
+    # You can customize the error page however you like
+    return jsonify({'error': 'Internal Server Error'}), 500
+
 
 @app.route('/advanced')
 def advanced():
