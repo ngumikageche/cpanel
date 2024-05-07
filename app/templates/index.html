@@ -1,5 +1,5 @@
-<!DOCTYPE html>
-<html>
+<!DOCTYPE>
+>
   <head>
     <meta charset="UTF-8">
     <title>AdminLTE 2 | Dashboard</title>
@@ -312,7 +312,7 @@
                 <i class="fa fa-dashboard"></i> <span>Dashboard</span> <i class="fa fa-angle-left pull-right"></i>
               </a>
               <ul class="treeview-menu">
-                <li class="active"><a href="index.html"><i class="fa fa-circle-o"></i> Dashboard v1</a></li>
+                <li class="active"><a href="{{ url_for('index')}}"><i class="fa fa-circle-o"></i> Dashboard v1</a></li>
                 <li><a href="{{ url_for('classic') }}"><i class="fa fa-circle-o"></i> Dashboard v2</a></li>
               </ul>
             </li>
@@ -323,14 +323,14 @@
                 <span class="label label-primary pull-right">4</span>
               </a>
               <ul class="treeview-menu">
-                <li><a href="top-nav.html"><i class="fa fa-circle-o"></i> Top Navigation</a></li>
-                <li><a href="boxed.html"><i class="fa fa-circle-o"></i> Boxed</a></li>
-                <li><a href="fixed.html"><i class="fa fa-circle-o"></i> Fixed</a></li>
-                <li><a href="collapsed-sidebar.html"><i class="fa fa-circle-o"></i> Collapsed Sidebar</a></li>
+                <li><a href="{{ url_for('top_nav')}}"><i class="fa fa-circle-o"></i> Top Navigation</a></li>
+                <li><a href="{{ url_for('boxed')}}"><i class="fa fa-circle-o"></i> Boxed</a></li>
+                <li><a href="{{ url_for('fixed')}}"><i class="fa fa-circle-o"></i> Fixed</a></li>
+                <li><a href="{{ url_for('collapsed_sidebar')}}"><i class="fa fa-circle-o"></i> Collapsed Sidebar</a></li>
               </ul>
             </li>
             <li>
-              <a href="pages/widgets.html">
+              <a href="{{ url_for('widgets')}}">
                 <i class="fa fa-th"></i> <span>Widgets</span> <small class="label pull-right bg-green">new</small>
               </a>
             </li>
@@ -341,9 +341,9 @@
                 <i class="fa fa-angle-left pull-right"></i>
               </a>
               <ul class="treeview-menu">
-                <li><a href="morris.html"><i class="fa fa-circle-o"></i> Morris</a></li>
-                <li><a href="flot.html"><i class="fa fa-circle-o"></i> Flot</a></li>
-                <li><a href="inline.html"><i class="fa fa-circle-o"></i> Inline charts</a></li>
+                <li><a href="{{ url_for('morris')}}"><i class="fa fa-circle-o"></i> Morris</a></li>
+                <li><a href="{{ url_for('flot')}}"><i class="fa fa-circle-o"></i> Flot</a></li>
+                <li><a href="{{ url_for('inline')}}"><i class="fa fa-circle-o"></i> Inline charts</a></li>
               </ul>
             </li>
             <li class="treeview">
@@ -367,9 +367,9 @@
                 <i class="fa fa-angle-left pull-right"></i>
               </a>
               <ul class="treeview-menu">
-                <li><a href="general.html"><i class="fa fa-circle-o"></i> General Elements</a></li>
-                <li><a href="advanced.html"><i class="fa fa-circle-o"></i> Advanced Elements</a></li>
-                <li><a href="editors.html"><i class="fa fa-circle-o"></i> Editors</a></li>
+                <li><a href="{{ url_for('general')}}"><i class="fa fa-circle-o"></i> General Elements</a></li>
+                <li><a href="{{ url_for('advanced')}}"><i class="fa fa-circle-o"></i> Advanced Elements</a></li>
+                <li><a href="{{ url_for('editors')}}"><i class="fa fa-circle-o"></i> Editors</a></li>
               </ul>
             </li>
             <li class="treeview">
@@ -432,7 +432,7 @@
                 <li><a href="#"><i class="fa fa-circle-o"></i> Level One</a></li>
               </ul>
             </li>
-            <li><a href="documentation/index.html"><i class="fa fa-book"></i> Documentation</a></li>
+            <li><a href="documentation/index"><i class="fa fa-book"></i> Documentation</a></li>
             <li class="header">LABELS</li>
             <li><a href="#"><i class="fa fa-circle-o text-danger"></i> Important</a></li>
             <li><a href="#"><i class="fa fa-circle-o text-warning"></i> Warning</a></li>
@@ -930,4 +930,4 @@
     <!-- AdminLTE for demo purposes -->
     <script src="static/dist/js/demo.js" type="text/javascript"></script>
   </body>
-</html>
+<>
