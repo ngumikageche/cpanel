@@ -1,4 +1,4 @@
-from flask import Flask, render_template, jsonify
+from flask import Flask, render_template, jsonify, request
 
 app = Flask(__name__)
 
@@ -13,15 +13,18 @@ def classic():
 @app.errorhandler(404)
 @app.route('/page_404')
 def page_404(error):
+    # Get the URL that the user tried accessing
+    url = request.url
     # You can customize the error page however you like
-    return jsonify({'error': 'Not found'}), 404
+    return jsonify({'error': 'Not found', 'url': url}), 404
 
 
 @app.errorhandler(500)
 @app.route('/page_500')
 def page_500(error):
+    url = request.url
     # You can customize the error page however you like
-    return jsonify({'error': 'Internal Server Error'}), 500
+    return jsonify({'error': 'Not found', 'url': url}),  500
 
 
 @app.route('/advanced')
