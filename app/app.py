@@ -1,6 +1,8 @@
 from flask import Flask, render_template, jsonify, request
 
 app = Flask(__name__)
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://user:password@localhost/dbname'
+db = SQLAlchemy(app)
 
 @app.route('/')
 def index():
