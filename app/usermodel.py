@@ -1,7 +1,6 @@
 from sqlalchemy import Table, Text, Float, Enum, DateTime
 from datetime import datetime
 import pytz
-#from flask_login import UserMixin
 
 # Association tables:
 user_products = Table('user_products', db.Model.metadata,
@@ -21,6 +20,7 @@ class Product(db.Model):
     description = db.Column(Text, nullable=True)
     price = db.Column(Float, nullable=True)
     category_id = db.Column(db.Integer, db.ForeignKey('category.id'))
+    image = db.Column(Text, nullable=True)
 
 class Category(db.Model):
     id = db.Column(db.Integer, primary_key=True)
