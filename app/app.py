@@ -1,6 +1,14 @@
-from flask import Flask, render_template, jsonify, request
+from flask import Flask, render_template, jsonify, request, request, redirect, url_for
+from flask_uploads import UploadSet, configure_uploads, IMAGES
+from werkzeug.utils import secure_filename
+import os
 
 app = Flask(__name__)
+app.config['SQLALCHEMY_DATABASE_URI'] = ''
+db = SQLAlchemy(app)
+
+app.config['UPLOADED_PHOTOS_DEST'] = ''
+configure_uploads(app, photos)
 
 @app.route('/')
 def index():
@@ -9,6 +17,46 @@ def index():
 @app.route('/classic')
 def classic():
     return render_template('classic.html')
+
+@app.route('/upload', methods=['GET', 'POST'])
+def upload():
+    if request.method == 'POST' and 'photo' in request.files:
+        filename = photos.save(request.files['photo'])
+        return redirect(url_for('show', filename=filename))
+    return render_template('upload.html')
+
+@app.route('/delete/<filename>')
+def delete(filename):
+    photos.delete(filename)
+
+    product = Product.query.filter_by(image=filename).first()
+    if product:
+        product.image = None
+        db.session.commit()
+
+    return redirect(url_for('index'))
+
+@app.route('/delete_product/<int:product_id>')
+def delete_product(product_id):
+    product = Product.query.get(product_id)
+    if product.image:
+        os.remove(os.path.join(app.config['UPLOADED_PHOTOS_DEST'], product.image))
+    db.session.delete(product)
+    db.session.commit()
+
+    return redirect(url_for('index'))
+
+@app.route('/edit_image', methods=['POST'])
+def edit_image():
+    
+    edited_image = request.files['edited_image']
+
+    filename = photos.save(edited_image)
+    product = Product.query.get(request.form['product_id'])
+    product.image = filename
+    db.session.commit()
+
+    return redirect(url_for('index'))          
 
 @app.errorhandler(404)
 @app.route('/page_404')
