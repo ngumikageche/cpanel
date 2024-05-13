@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, ForeignKey, DateTime, Enum, Float, Text
+from sqlalchemy import Column, Integer, String, ForeignKey, DateTime, Enum, Float, Text, Boolean
 from sqlalchemy.orm import relationship
 from datetime import datetime
 import pytz
@@ -9,6 +9,9 @@ class User(db.Model):
     id = Column(Integer, primary_key=True)
     username = Column(String(80), unique=True, nullable=False)
     company_email = Column(String(120), unique=True, nullable=False)
+    password = Column(String(128), nullable=False)  # Store hashed passwords
+    authentication_level = Column(Integer, nullable=False, default=0)
+    status = Column(Boolean, nullable=False, default=True)  # True for active, False for inactive
     orders = relationship('Order', backref='user')
     products = relationship('Product', secondary='user_product', backref='users')
 
