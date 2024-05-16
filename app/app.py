@@ -14,14 +14,23 @@ from datetime import datetime
 from flask_bcrypt import Bcrypt
 from flask import jsonify
 
+
 db = SQLAlchemy()
+login_manager = LoginManager()
+bcrypt = Bcrypt()
 
 def create_app():
     app = Flask(__name__)
     app.config.from_pyfile('config.py')
     db.init_app(app)
+    login_manager.init_app(app)
+    bcrypt.init_app(app)
+    CSRFProtect(app)
     app.config["IMAGE_FOLDER"] = "static/images/"
-    from models.usermodel import User, Product, Category, Order
+    
+    # Import API routes here to avoid circular imports
+    from api.users import user_bp
+    app.register_blueprint(user_bp)
     
     @app.route('/')
     def index():
@@ -212,4 +221,4 @@ if __name__ == '__main__':
     app = create_app()
     # with app.app_context():
     #     db.create_all()
-    app.run(port="5001")
+    app.run(port="5001", debug=True)

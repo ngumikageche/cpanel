@@ -1,57 +1,55 @@
-from sqlalchemy import Column, Integer, String, ForeignKey, DateTime, Enum, Float, Text, Boolean
-from sqlalchemy.orm import relationship
-from datetime import datetime
-import pytz
+from sqlalchemy import Column, Integer, String, Float, ForeignKey, Boolean, DateTime
+from sqlalchemy.orm import relationship, backref
 from app import db
+
 class User(db.Model):
-    __tablename__ = 'user'
-
+    __tablename__ = 'users'
     id = Column(Integer, primary_key=True)
-    username = Column(String(80), unique=True, nullable=False)
-    company_email = Column(String(120), unique=True, nullable=False)
-    password = Column(String(128), nullable=False)  # Store hashed passwords
-    authentication_level = Column(Integer, nullable=False, default=0)
-    status = Column(Boolean, nullable=False, default=True)  # True for active, False for inactive
+    username = Column(String, unique=True, nullable=False)
+    company_email = Column(String, unique=True, nullable=False)
+    password = Column(String, nullable=False)
+    authentication_level = Column(Integer, nullable=False)
+    status = Column(Boolean, default=True)
+    
     orders = relationship('Order', backref='user')
-    products = relationship('Product', secondary='user_product', backref='users')
-
-class Product(db.Model):
-    __tablename__ = 'product'
-
-    id = Column(Integer, primary_key=True)
-    name = Column(String(255), nullable=False)
-    description = Column(Text, nullable=True)
-    price = Column(Float, nullable=True)
-    category_id = Column(Integer, ForeignKey('category.id'))
-    image_url = Column(Text, nullable=True)
-    category = relationship('Category', backref='products')
+    user_products = relationship('UserProduct', backref='user')
 
 class Category(db.Model):
-    __tablename__ = 'category'
-
+    __tablename__ = 'categories'
     id = Column(Integer, primary_key=True)
-    name = Column(String(255), nullable=False)
+    name = Column(String, unique=True, nullable=False)
+    
     products = relationship('Product', backref='category')
 
-class Order(db.Model):
-    __tablename__ = 'order'
-
+class Product(db.Model):
+    __tablename__ = 'products'
     id = Column(Integer, primary_key=True)
-    user_id = Column(Integer, ForeignKey('user.id'))
-    status = Column(Enum('pending', 'shipped', 'delivered'), nullable=False, default='pending')
-    products = relationship('Product', secondary='order_product')
-    order_date = Column(DateTime, default=datetime.now(pytz.timezone('Africa/Nairobi')))
+    name = Column(String, nullable=False)
+    description = Column(String, nullable=False)
+    price = Column(Float, nullable=False)
+    category_id = Column(Integer, ForeignKey('categories.id'), nullable=False)
+    image_url = Column(String, nullable=False)
+    
+    user_products = relationship('UserProduct', backref='product')
+    order_products = relationship('OrderProduct', backref='product')
+
+class Order(db.Model):
+    __tablename__ = 'orders'
+    id = Column(Integer, primary_key=True)
+    user_id = Column(Integer, ForeignKey('users.id'), nullable=False)
+    status = Column(String, nullable=False)
+    order_date = Column(DateTime, nullable=False)
+    
+    order_products = relationship('OrderProduct', backref='order')
 
 class UserProduct(db.Model):
-    __tablename__ = 'user_product'
-
+    __tablename__ = 'user_products'
     id = Column(Integer, primary_key=True)
-    user_id = Column(Integer, ForeignKey('user.id'))
-    product_id = Column(Integer, ForeignKey('product.id'))
+    user_id = Column(Integer, ForeignKey('users.id'), nullable=False)
+    product_id = Column(Integer, ForeignKey('products.id'), nullable=False)
 
 class OrderProduct(db.Model):
-    __tablename__ = 'order_product'
-
+    __tablename__ = 'order_products'
     id = Column(Integer, primary_key=True)
-    order_id = Column(Integer, ForeignKey('order.id'))
-    product_id = Column(Integer, ForeignKey('product.id'))
+    order_id = Column(Integer, ForeignKey('orders.id'), nullable=False)
+    product_id = Column(Integer, ForeignKey('products.id'), nullable=False)
