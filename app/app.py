@@ -29,8 +29,28 @@ def create_app():
     app.config["IMAGE_FOLDER"] = "static/images/"
     
     # Import API routes here to avoid circular imports
+    from api.authentication import auth_bp
     from api.users import user_bp
+    from api.products import product_bp
+    from api.blogs import blog_bp
+    from api.comments import comment_bp
+    from api.tags import tag_bp
+    from api.categories import category_bp
+
+
+    app.register_blueprint(auth_bp)
+    app.register_blueprint(product_bp)
     app.register_blueprint(user_bp)
+    app.register_blueprint(blog_bp)
+    app.register_blueprint(comment_bp)
+    app.register_blueprint(tag_bp)
+    app.register_blueprint(category_bp)
+    
+   
+    @login_manager.user_loader
+    def load_user(user_id):
+        from models.usermodel import User
+        return User.query.get(int(user_id))
     
     @app.route('/')
     def index():
@@ -40,46 +60,6 @@ def create_app():
     def classic():
         return render_template('classic.html')
 
-    @app.route('/edit_product/<int:id>', methods=['GET', 'POST'], strict_slashes=True)
-    def edit_product(id):
-        """ Generate a UUID and convert it to a tring """
-        cache_id = str(uuid.uuid4())
-        product = Product.query.get_or_404(id)
-        
-        if request.method == 'POST':
-            
-            f = request.files['image_url']
-            filename = secure_filename(f.filename)
-            f.save(app.config['IMAGE_FOLDER'] + filename)
-
-            name = request.form['name']
-            image_url = filename
-            price = request.form['price']
-            now = datetime.datetime.now()
-
-            product.name = name,
-            product.image_url = image_url,
-            product.created_at = now,
-            product.price = price
-            
-            db.session.add(product)
-            db.session.commit()
-            return redirect('/products')
-        else:
-            return redirect('/products')
-    
-    @app.route('/delete_product/<int:id>', methods=['GET', 'POST'])
-    def delete_product(id):
-        # Remove the product by ID (replace with your actual data source)
-        if request.method == 'POST':
-            product = Product.query.get_or_404(id)
-            db.session.delete(product)
-            db.session.commit()
-
-            # Redirect back to the product list after deleting
-            return redirect('/products')
-        else:
-            return redirect('/products')
     @app.errorhandler(404)
     @app.route('/page_404')
     def page_404(error):
