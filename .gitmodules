@@ -1,0 +1,3 @@
+[submodule "app/websites/jambotech-website"]
+	path = app/websites/jambotech-website
+	url = git@github.com:ngumikageche/jambotech-website.git
