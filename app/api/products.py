@@ -1,29 +1,47 @@
-from flask import Blueprint, request, jsonify, redirect, url_for, render_template, current_app
+from flask import Flask, Blueprint, request, jsonify, redirect, url_for, render_template, current_app
 from werkzeug.utils import secure_filename
 import os
 from app import db
 from models.usermodel import Product  # Adjust import path based on your structure
 
 product_bp = Blueprint('product', __name__, url_prefix='/products')
-
+app = Flask(__name__)
+app.config["IMAGE_FOLDER"] = "static/images/"
 @product_bp.route('/product/create', methods=['POST'])
 def create_product():
     # Get form data
-    name = request.form.get('name')
+    
+
+    name = request.form.get('prodname')
     description = request.form.get('description')
     price = request.form.get('price')
-    stock = request.form.get('stock')  # Assuming stock is also required
-    category_id = request.form.get('category_id')  # Assuming category is required
-    image = request.files.get('image')
+    stock = request.form.get('stock')
+    category_id = request.form.get('category_id')
+    f = request.files['image']
+    filename = secure_filename(f.filename)
+    f.save(app.config['IMAGE_FOLDER'] + filename)
+    image = filename
 
-    if not name or not description or not price or not stock or not category_id or not image:
-        return jsonify({"error": "Missing required fields"}), 400
+    # Check for missing fields
+    missing_fields = []
+    if not name:
+        missing_fields.append('name')
+    if not description:
+        missing_fields.append('description')
+    if not price:
+        missing_fields.append('price')
+    if not stock:
+        missing_fields.append('stock')
+    if not category_id:
+        missing_fields.append('category_id')
+    if not image:
+        missing_fields.append('image')
+
+    if missing_fields:
+        return jsonify({"error": "Missing required fields", "fields": missing_fields}), 400
 
     # Save the image file
-    filename = secure_filename(image.filename)
-    image_path = os.path.join(current_app.config['UPLOAD_FOLDER'], filename)
-    image.save(image_path)
-
+   
     # Create a new product
     product = Product(
         name=name,
@@ -41,7 +59,7 @@ def create_product():
 @product_bp.route('/product/<int:id>', methods=['GET'])
 def read_product(id):
     product = Product.query.get_or_404(id)
-    return render_template('product.html', product=product)
+    return render_template('products.html', product=product)
 
 @product_bp.route('/product/<int:id>', methods=['POST'])
 def update_product(id):

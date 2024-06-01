@@ -13,61 +13,102 @@
                   <h3 class="box-title">Input masks</h3>
                 </div>
                 <div class="box-body">
+                  <!-- Product Name -->
+                  <div class="form-group">
+                      <label for="name">Product Name:</label>
+                      <input type="text" id="name" name="name" class="form-control">
+                  </div>
+              
+                  <!-- Product Description -->
+                  <div class="form-group">
+                      <label for="description">Product Description:</label>
+                      <textarea id="description" name="description" class="form-control"></textarea>
+                  </div>
+              
+                  <!-- Product Price -->
+                  <div class="form-group">
+                      <label for="price">Product Price:</label>
+                      <input type="text" id="price" name="price" class="form-control" data-inputmask="'alias': 'currency'">
+                  </div>
+              
+                  <!-- Product Stock -->
+                  <div class="form-group">
+                      <label for="stock">Product Stock:</label>
+                      <input type="number" id="stock" name="stock" class="form-control">
+                  </div>
+              
+                  <!-- Category ID -->
+                  <div class="form-group">
+                      <label for="category_id">Category ID:</label>
+                      <input type="number" id="category_id" name="category_id" class="form-control">
+                  </div>
+              
+                  <!-- Product Image -->
+                  <div class="form-group">
+                      <label for="image">Product Image:</label>
+                      <input type="file" id="image" name="image" class="form-control">
+                  </div>
+              
                   <!-- Date dd/mm/yyyy -->
                   <div class="form-group">
-                    <label>Date masks:</label>
-                    <div class="input-group">
-                      <div class="input-group-addon">
-                        <i class="fa fa-calendar"></i>
-                      </div>
-                      <input type="text" class="form-control" data-inputmask="'alias': 'dd/mm/yyyy'" data-mask/>
-                    </div><!-- /.input group -->
+                      <label>Date masks:</label>
+                      <div class="input-group">
+                          <div class="input-group-addon">
+                              <i class="fa fa-calendar"></i>
+                          </div>
+                          <input type="text" class="form-control" data-inputmask="'alias': 'dd/mm/yyyy'" data-mask/>
+                      </div><!-- /.input group -->
                   </div><!-- /.form group -->
-
+              
                   <!-- Date mm/dd/yyyy -->
                   <div class="form-group">
-                    <div class="input-group">
-                      <div class="input-group-addon">
-                        <i class="fa fa-calendar"></i>
-                      </div>
-                      <input type="text" class="form-control" data-inputmask="'alias': 'mm/dd/yyyy'" data-mask/>
-                    </div><!-- /.input group -->
+                      <div class="input-group">
+                          <div class="input-group-addon">
+                              <i class="fa fa-calendar"></i>
+                          </div>
+                          <input type="text" class="form-control" data-inputmask="'alias': 'mm/dd/yyyy'" data-mask/>
+                      </div><!-- /.input group -->
                   </div><!-- /.form group -->
-
-                  <!-- phone mask -->
+              
+                  <!-- US phone mask -->
                   <div class="form-group">
-                    <label>US phone mask:</label>
-                    <div class="input-group">
-                      <div class="input-group-addon">
-                        <i class="fa fa-phone"></i>
-                      </div>
-                      <input type="text" class="form-control" data-inputmask='"mask": "(999) 999-9999"' data-mask/>
-                    </div><!-- /.input group -->
+                      <label>US phone mask:</label>
+                      <div class="input-group">
+                          <div class="input-group-addon">
+                              <i class="fa fa-phone"></i>
+                          </div>
+                          <input type="text" class="form-control" data-inputmask='"mask": "(999) 999-9999"' data-mask/>
+                      </div><!-- /.input group -->
                   </div><!-- /.form group -->
-
-                  <!-- phone mask -->
+              
+                  <!-- Intl US phone mask -->
                   <div class="form-group">
-                    <label>Intl US phone mask:</label>
-                    <div class="input-group">
-                      <div class="input-group-addon">
-                        <i class="fa fa-phone"></i>
-                      </div>
-                      <input type="text" class="form-control" data-inputmask="'mask': ['999-999-9999 [x99999]', '+099 99 99 9999[9]-9999']" data-mask/>
-                    </div><!-- /.input group -->
+                      <label>Intl US phone mask:</label>
+                      <div class="input-group">
+                          <div class="input-group-addon">
+                              <i class="fa fa-phone"></i>
+                          </div>
+                          <input type="text" class="form-control" data-inputmask="'mask': ['999-999-9999 [x99999]', '+099 99 99 9999[9]-9999']" data-mask/>
+                      </div><!-- /.input group -->
                   </div><!-- /.form group -->
-
+              
                   <!-- IP mask -->
                   <div class="form-group">
-                    <label>IP mask:</label>
-                    <div class="input-group">
-                      <div class="input-group-addon">
-                        <i class="fa fa-laptop"></i>
-                      </div>
-                      <input type="text" class="form-control" data-inputmask="'alias': 'ip'" data-mask/>
-                    </div><!-- /.input group -->
+                      <label>IP mask:</label>
+                      <div class="input-group">
+                          <div class="input-group-addon">
+                              <i class="fa fa-laptop"></i>
+                          </div>
+                          <input type="text" class="form-control" data-inputmask="'alias': 'ip'" data-mask/>
+                      </div><!-- /.input group -->
                   </div><!-- /.form group -->
-
-                </div><!-- /.box-body -->
+              
+                  <!-- Submit Button -->
+                  <div class="form-group">
+                      <button type="button" onclick="createProduct()" class="btn btn-primary">Create Product</button>
+                  </div>
+              </div><!-- /.box-body -->
+              
               </div><!-- /.box -->
 
               <div class="box box-info">

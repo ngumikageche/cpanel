@@ -25,7 +25,7 @@ def create_app():
     db.init_app(app)
     login_manager.init_app(app)
     bcrypt.init_app(app)
-    CSRFProtect(app)
+    # CSRFProtect(app)
     app.config["IMAGE_FOLDER"] = "static/images/"
     
     # Import API routes here to avoid circular imports
@@ -45,7 +45,6 @@ def create_app():
     app.register_blueprint(comment_bp)
     app.register_blueprint(tag_bp)
     app.register_blueprint(category_bp)
-    
    
     @login_manager.user_loader
     def load_user(user_id):
@@ -80,7 +79,15 @@ def create_app():
     @app.route('/advanced')
     def advanced():
         return render_template('advanced.html')
-
+    
+    @app.route('/add-categories')
+    def addcategories():
+        return render_template('categories.html')
+    
+    @app.route('/add-product')
+    def addproducts():
+        return render_template('products.html')
+    
     @app.route('/base')
     def base():
         return render_template('base.html')
