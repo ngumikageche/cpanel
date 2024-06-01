@@ -11,9 +11,7 @@ def get_users():
     users_list = [{
         'id': user.id,
         'username': user.username,
-        'company_email': user.company_email,
-        'authentication_level': user.authentication_level,
-        'status': user.status
+        'email': user.email,
     } for user in users]
     return jsonify(users_list)
 
@@ -21,7 +19,7 @@ def get_users():
 def create_user():
     data = request.json
     # Validate input data
-    required_fields = ['username', 'company_email', 'password']
+    required_fields = ['username', 'email', 'password']
     if not all(field in data for field in required_fields):
         return jsonify({'error': 'Missing required fields'}), 400
     
@@ -30,10 +28,8 @@ def create_user():
 
     new_user = User(
         username=data['username'],
-        company_email=data['company_email'],
-        password=hashed_password,
-        authentication_level=data.get('authentication_level', 0),
-        status=data.get('status', True)
+        email=data['email'],
+        password_hash=hashed_password
     )
 
     db.session.add(new_user)
@@ -47,9 +43,7 @@ def get_user(user_id):
     user_dict = {
         'id': user.id,
         'username': user.username,
-        'company_email': user.company_email,
-        'authentication_level': user.authentication_level,
-        'status': user.status
+        'email': user.email,
     }
     return jsonify(user_dict)
 
@@ -60,14 +54,10 @@ def update_user(user_id):
     # Update user attributes with the provided data
     if 'username' in data:
         user.username = data['username']
-    if 'company_email' in data:
-        user.company_email = data['company_email']
+    if 'email' in data:
+        user.email = data['email']
     if 'password' in data:
-        user.password = generate_password_hash(data['password'])
-    if 'authentication_level' in data:
-        user.authentication_level = data['authentication_level']
-    if 'status' in data:
-        user.status = data['status']
+        user.password_hash = generate_password_hash(data['password'])
 
     db.session.commit()
 
