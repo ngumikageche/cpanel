@@ -86,7 +86,10 @@ def create_app():
     
     @app.route('/add-product')
     def addproducts():
-        return render_template('products.html')
+        from models.usermodel import Category
+        categories = Category.query.all()
+        print(categories)
+        return render_template('products.html', category=categories)
     
     @app.route('/base')
     def base():

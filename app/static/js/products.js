@@ -1,3 +1,32 @@
+// Function to fetch category IDs from the server
+function fetchCategoryIds() {
+    $.ajax({
+        url: 'products/categories', // URL to fetch category IDs from
+        type: 'GET',
+        success: function(response) {
+            // Render category IDs in the select element
+            var selectElement = document.getElementById('category_id');
+            selectElement.innerHTML = ''; // Clear previous options
+            response.forEach(function(category) {
+                var option = document.createElement('option');
+                option.value = category.id;
+                option.text = category.name;
+                selectElement.appendChild(option);
+            });
+        },
+        error: function(xhr, status, error) {
+            console.log('Error fetching category IDs:', error);
+            // Handle error if needed
+        }
+    });
+}
+
+// Call fetchCategoryIds() function when the page is loaded
+window.onload = function() {
+    fetchCategoryIds();
+};
+
+// Function to validate and create product
 function validateAndCreateProduct() {
     var form = document.getElementById('productForm');
 
@@ -10,6 +39,7 @@ function validateAndCreateProduct() {
         $(form).addClass('was-validated');
     }
 }
+
 
 function createProduct() {
     var form = document.getElementById('productForm');
