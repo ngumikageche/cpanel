@@ -5,18 +5,34 @@ from app import db
 from datetime import datetime
 
 
+# Company model
+class Company(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(255), nullable=False)
+    description = db.Column(db.Text, nullable=False)
+    industry = db.Column(db.String(100), nullable=False)
+    founded_at = db.Column(db.DateTime, nullable=False)
+    headquarters = db.Column(db.String(255))
+    website = db.Column(db.String(255))
+    products = db.relationship('Product', backref='manufacturer', lazy=True)
+    
+    def __repr__(self):
+        return f'<Company {self.name}>'
+
 # User model
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(64), unique=True, nullable=False)
     email = db.Column(db.String(120), unique=True, nullable=False)
     password_hash = db.Column(db.String(128))
+    company_id = db.Column(db.Integer, db.ForeignKey('company.id'), nullable=False)
     blogs = db.relationship('Blog', backref='author', lazy=True)
     comments = db.relationship('Comment', backref='author', lazy=True)
     orders = db.relationship('Order', backref='user', lazy=True)
 
     def __repr__(self):
         return f'<User {self.username}>'
+
 
 # Category model
 class Category(db.Model):
@@ -83,14 +99,17 @@ class Product(db.Model):
     price = db.Column(db.Numeric(10, 2), nullable=False)
     stock = db.Column(db.Integer, nullable=False)
     category_id = db.Column(db.Integer, db.ForeignKey('category.id'), nullable=True)
+    company_id = db.Column(db.Integer, db.ForeignKey('company.id'), nullable=False)
+    company = relationship('Company', backref='company_products', lazy=True)
     tags = db.relationship('Tag', secondary=product_tags, lazy='subquery',
-                           backref=db.backref('products', lazy=True))
-    orders = db.relationship('Order', backref='product', lazy=True)
+                           backref=db.backref('product_tags', lazy=True))
+    orders = db.relationship('Order', backref='ordered_product', lazy=True)
     image = db.Column(db.String(255))
    
     def __repr__(self):
         return f'<Product {self.name}>'
 
+# Order model
 class Order(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)

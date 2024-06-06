@@ -1,6 +1,6 @@
 from flask import Blueprint, request, jsonify
 from app import db
-from models.usermodel import User
+from models.usermodel import User, Company
 from werkzeug.security import generate_password_hash
 
 user_bp = Blueprint('user', __name__, url_prefix='/users')
@@ -12,24 +12,34 @@ def get_users():
         'id': user.id,
         'username': user.username,
         'email': user.email,
+        'company': user.company_id,
+        'pass': user.password_hash,
     } for user in users]
     return jsonify(users_list)
 
 @user_bp.route('/', methods=['POST'])
 def create_user():
     data = request.json
+    
     # Validate input data
-    required_fields = ['username', 'email', 'password']
+    required_fields = ['username', 'email', 'password', 'company_id']  # Add 'company_id' to required fields
     if not all(field in data for field in required_fields):
         return jsonify({'error': 'Missing required fields'}), 400
     
     # Hash the password
     hashed_password = generate_password_hash(data['password'])
-
+    
+    # Get company details
+    company = Company.query.get(data['company_id'])
+    if not company:
+        return jsonify({'error': 'Company not found'}), 404
+    
+    # Create a new user associated with the company
     new_user = User(
         username=data['username'],
         email=data['email'],
-        password_hash=hashed_password
+        password_hash=hashed_password,
+        company=company  # Associate the user with the company
     )
 
     db.session.add(new_user)

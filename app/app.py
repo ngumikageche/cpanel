@@ -10,7 +10,8 @@ from werkzeug.utils import secure_filename
 from flask_login import LoginManager, login_user, logout_user, login_required, UserMixin
 from werkzeug.security import generate_password_hash, check_password_hash
 import uuid
-from datetime import datetime
+import jwt
+from datetime import datetime, timedelta
 from flask_bcrypt import Bcrypt
 from flask import jsonify
 
@@ -36,8 +37,9 @@ def create_app():
     from api.comments import comment_bp
     from api.tags import tag_bp
     from api.categories import category_bp
+    from api.company import company_bp
 
-
+    app.register_blueprint(company_bp)
     app.register_blueprint(auth_bp)
     app.register_blueprint(product_bp)
     app.register_blueprint(user_bp)
@@ -45,11 +47,17 @@ def create_app():
     app.register_blueprint(comment_bp)
     app.register_blueprint(tag_bp)
     app.register_blueprint(category_bp)
+
+    
    
     @login_manager.user_loader
     def load_user(user_id):
         from models.usermodel import User
         return User.query.get(int(user_id))
+    
+    @app.route('/login')
+    def login():
+        return render_template('login.html')
     
     @app.route('/')
     def index():
@@ -58,6 +66,7 @@ def create_app():
     @app.route('/classic')
     def classic():
         return render_template('classic.html')
+
 
     @app.errorhandler(404)
     @app.route('/page_404')
@@ -211,4 +220,4 @@ if __name__ == '__main__':
     app = create_app()
     # with app.app_context():
     #     db.create_all()
-    app.run(port="5001", debug=True)
+    app.run(port="5000", debug=True)
