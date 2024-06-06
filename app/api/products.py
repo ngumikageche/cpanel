@@ -2,54 +2,44 @@ from flask import Flask, Blueprint, request, jsonify, redirect, url_for, render_
 from werkzeug.utils import secure_filename
 import os
 from app import db
-from models.usermodel import Product  # Adjust import path based on your structure
+from models.usermodel import Product, Company  # Adjust import path based on your structure
 
 product_bp = Blueprint('product', __name__, url_prefix='/products')
 app = Flask(__name__)
 app.config["IMAGE_FOLDER"] = "static/images/"
-@product_bp.route('/product/create', methods=['POST'])
+@product_bp.route('/create', methods=['POST'])
 def create_product():
     # Get form data
-    
-
-    name = request.form.get('prodname')
+    name = request.form.get('name')
     description = request.form.get('description')
     price = request.form.get('price')
     stock = request.form.get('stock')
     category_id = request.form.get('category_id')
-    f = request.files['image']
-    filename = secure_filename(f.filename)
-    f.save(app.config['IMAGE_FOLDER'] + filename)
-    image = filename
-
+    image = request.files.get('image')
+    company_id = request.form.get('company_id')  # Add company_id to form data
+    
     # Check for missing fields
-    missing_fields = []
-    if not name:
-        missing_fields.append('name')
-    if not description:
-        missing_fields.append('description')
-    if not price:
-        missing_fields.append('price')
-    if not stock:
-        missing_fields.append('stock')
-    if not category_id:
-        missing_fields.append('category_id')
-    if not image:
-        missing_fields.append('image')
-
-    if missing_fields:
-        return jsonify({"error": "Missing required fields", "fields": missing_fields}), 400
-
+    if not all([name, description, price, stock, category_id, image, company_id]):
+        return jsonify({"error": "Missing required fields"}), 400
+    
     # Save the image file
-   
-    # Create a new product
+    filename = secure_filename(image.filename)
+    image.save(os.path.join(current_app.config["IMAGE_FOLDER"], filename))
+    
+    # Get company details
+    company = Company.query.get(company_id)
+    if not company:
+        return jsonify({"error": "Company not found"}), 404
+    
+    # Create a new product associated with the company
     product = Product(
         name=name,
         description=description,
         price=price,
         stock=stock,
         category_id=category_id,
-        image=filename
+        image=filename,
+        company=company  # Associate the product with the company
     )
     db.session.add(product)
     db.session.commit()

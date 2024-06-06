@@ -15,7 +15,7 @@
           <!-- Product Form -->
           <form id="productForm">
             <!-- Product Name -->
-            <div class="form-group">
+            <div class="form-group"  novalidate>
                 <label for="name">Product Name:</label>
                 <input type="text" id="name" name="prodname" class="form-control" required>
                 <div class="invalid-feedback">Please enter a product name.</div>
@@ -44,10 +44,15 @@
         
             <!-- Category ID -->
             <div class="form-group">
-                <label for="category_id">Category ID:</label>
-                <input type="number" id="category_id" name="category_id" class="form-control" required>
-                <div class="invalid-feedback">Please enter a category ID.</div>
-            </div>
+              <label for="category_id">Category:</label>
+              <select id="category_id" name="category_id" class="form-control" required>
+                {% for category in category %}
+                    <option value="{{ category.id }}">{{ category.name }}</option>
+                {% endfor %}
+            </select>
+            
+              <div class="invalid-feedback">Please select a category.</div>
+          </div>
         
             <!-- Product Image -->
             <div class="form-group">
@@ -58,7 +63,7 @@
         
             <!-- Submit Button -->
             <div class="form-group">
-                <button type="button" onclick="createProduct()" class="btn btn-primary">Create Product</button>
+                <button type="button" onclick="validateAndCreateProduct()" class="btn btn-primary">Create Product</button>
             </div>
         </form>
         </div><!-- /.box-body -->
